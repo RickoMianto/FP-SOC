@@ -1,7 +1,5 @@
 # FP-SOC
 
-Tentu, berikut adalah penjelasan setiap fitur dari proyek deteksi anomali DNS ini dalam format Markdown, seperti yang Anda minta.
-
 ### Penjelasan Fitur (Features)
 
 Berikut adalah penjelasan untuk setiap kolom (fitur) yang ada di dalam dataset `dns_log.csv` dan fitur-fitur yang dihasilkan oleh proses *feature engineering* dalam skrip Python.
