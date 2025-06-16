@@ -2,7 +2,7 @@
 
 Advanced Domain Generation Algorithm (DGA) detection system using Deep Learning for Security Operations Center (SOC) environments.
 
-## 🎯 Overview
+## Overview
 
 This project implements a comprehensive DGA detection system that combines:
 - **Deep Learning**: Hybrid CNN-LSTM architecture for maximum accuracy
@@ -10,25 +10,25 @@ This project implements a comprehensive DGA detection system that combines:
 - **Interactive Dashboard**: User-friendly Streamlit interface
 - **SOC Integration**: Ready for production SOC environments
 
-## 🚀 Features
+## Features
 
 ### Core Capabilities
-- ✅ **High Accuracy**: >95% detection accuracy using deep learning
-- ✅ **Real-time Processing**: Live domain analysis and monitoring
-- ✅ **Batch Analysis**: Process thousands of domains efficiently
-- ✅ **Interactive Dashboard**: Web-based interface for SOC analysts
-- ✅ **Alert System**: Configurable risk-based alerting
-- ✅ **Model Training**: Custom model training with your data
+- **High Accuracy**: >95% detection accuracy using deep learning
+- **Real-time Processing**: Live domain analysis and monitoring
+- **Batch Analysis**: Process thousands of domains efficiently
+- **Interactive Dashboard**: Web-based interface for SOC analysts
+- **Alert System**: Configurable risk-based alerting
+- **Model Training**: Custom model training with your data
 
 ### Advanced Features
-- 🧠 **Hybrid Deep Learning**: CNN + LSTM for pattern recognition
-- 📊 **Feature Engineering**: 17+ advanced domain features
-- 🎨 **Rich Visualizations**: Interactive charts and graphs
-- 📱 **Responsive Design**: Works on desktop and mobile
-- 💾 **Model Persistence**: Save and load trained models
-- 📈 **Performance Monitoring**: Track model performance over time
+- **Hybrid Deep Learning**: CNN + LSTM for pattern recognition
+- **Feature Engineering**: 17+ advanced domain features
+- **Rich Visualizations**: Interactive charts and graphs
+- **Responsive Design**: Works on desktop and mobile
+- **Model Persistence**: Save and load trained models
+- **Performance Monitoring**: Track model performance over time
 
-## 🏗️ Architecture
+## Architecture
 
 ### Model Architecture
 ```
@@ -59,7 +59,7 @@ Embedding Layer (128-dim character embeddings)
 - **N-gram Analysis**: Bigrams and trigrams
 - **Pattern Recognition**: Consecutive characters, randomness indicators
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -71,13 +71,13 @@ Embedding Layer (128-dim character embeddings)
 1. **Clone the repository**
 ```bash
 git clone https://github.com/RickoMianto/FP-SOC.git
-cd project-aiops-dga
+cd FP-SOC
 ```
 
 2. **Create virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# On Windows: venv\Scripts\activate
 ```
 
 3. **Install dependencies**
@@ -93,27 +93,16 @@ mkdir -p data models static
 5. **Add your dataset**
    - Place your `dga_data.csv` file in the `data/` directory
    - Format: `isDGA,domain,host,subclass`
+   - you can get the dataset by following this [link](https://www.kaggle.com/datasets/gtkcyber/dga-dataset)
 
-## 🎮 Usage
+## Usage
 
 ### 1. Training the Model
-
-#### Option A: Command Line Training
 ```bash
 python main.py
 ```
 
-#### Option B: Web Interface Training
-```bash
-streamlit run app.py
-```
-- Navigate to "Model Training" tab
-- Upload your training dataset
-- Configure training parameters
-- Click "Start Training"
-
 ### 2. Running the Dashboard
-
 ```bash
 streamlit run app.py
 ```
