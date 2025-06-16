@@ -10,6 +10,29 @@ This project implements a comprehensive DGA detection system that combines:
 - **Interactive Dashboard**: User-friendly Streamlit interface
 - **SOC Integration**: Ready for production SOC environments
 
+## Project Structure
+
+```
+project-aiops-dga/
+│
+├── data/
+│   └── dga_data.csv           # Dataset utama
+│
+├── models/                    # Model yang sudah dilatih disimpan disini
+│   ├── best_model.h5         # Best performing model
+│   ├── model_weights.h5      # Model weights
+│   └── tokenizer.pkl         # Text tokenizer
+│
+├── static/
+│   └── style.css             # Styling untuk Streamlit
+│
+├── main.py                   # File utama - All-in-one solution
+├── app.py                    # Streamlit web application
+├── requirements.txt          # Python dependencies
+├── config.py                 # Konfigurasi project
+└── README.md                 # This file
+```
+
 ## Features
 
 ### Core Capabilities
@@ -51,6 +74,37 @@ Embedding Layer (128-dim character embeddings)
 │ - Output Layer (Sigmoid/Softmax)        │
 └─────────────────────────────────────────┘
 ```
+### Model Architecture Details
+
+#### LSTM Branch
+```python
+# Sequential pattern recognition
+lstm_input = Embedding(vocab_size, embedding_dim)(input_layer)
+lstm_1 = LSTM(256, return_sequences=True, dropout=0.3)(lstm_input)
+lstm_2 = LSTM(128, dropout=0.3)(lstm_1)
+```
+
+#### CNN Branch
+```python
+# Local pattern detection
+cnn_input = Embedding(vocab_size, embedding_dim)(input_layer)
+conv_1 = Conv1D(128, 3, activation='relu')(cnn_input)
+pool_1 = MaxPooling1D(2)(conv_1)
+conv_2 = Conv1D(64, 3, activation='relu')(pool_1)
+global_pool = GlobalMaxPooling1D()(conv_2)
+```
+
+#### Feature Fusion
+```python
+# Combine all features
+concat_features = Concatenate()([lstm_2, global_pool, numeric_features])
+dense_1 = Dense(512, activation='relu')(concat_features)
+batch_norm = BatchNormalization()(dense_1)
+dropout_1 = Dropout(0.3)(batch_norm)
+dense_2 = Dense(256, activation='relu')(dropout_1)
+dropout_2 = Dropout(0.3)(dense_2)
+output = Dense(1, activation='sigmoid')(dropout_2)
+```
 
 ### Feature Engineering
 - **Basic Features**: Length, character counts, special characters
@@ -65,6 +119,33 @@ Embedding Layer (128-dim character embeddings)
 - Python 3.8+
 - TensorFlow 2.13+
 - 4GB+ RAM (8GB+ recommended for training)
+
+### Core Requirements (`requirements.txt`)
+```
+# Core ML Libraries
+tensorflow==2.13.0
+scikit-learn==1.3.0
+pandas==2.0.3
+numpy==1.24.3
+
+# Visualization
+plotly==5.15.0
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# Web Framework
+streamlit==1.25.0
+
+# Text Processing
+nltk==3.8.1
+
+# Utilities
+tqdm==4.65.0
+joblib==1.3.2
+
+# Model Serving
+pickle-mixin==1.0.2
+```
 
 ### Setup Instructions
 
@@ -126,7 +207,7 @@ The dashboard will be available at `http://localhost:8501`
 - Set up automated alerts for high-risk domains
 - Track trends and patterns over time
 
-## 📊 Dataset Format
+## Dataset Format
 
 Your training dataset should be a CSV file with the following columns:
 
@@ -144,56 +225,57 @@ legitimate,facebook,facebook.com,legitimate
 - **host**: Full hostname (optional, can be same as domain)
 - **subclass**: DGA family or category (optional)
 
-## ⚙️ Configuration
+## Configuration
 
 ### Model Parameters (`config.py`)
 ```python
+# Model configuration
 MODEL_CONFIG = {
     'max_length': 64,          # Maximum domain length
+    'vocab_size': 40,          # Character vocabulary size
     'embedding_dim': 128,      # Embedding dimension
     'lstm_units': 256,         # LSTM units
     'cnn_filters': 128,        # CNN filters
+    'dense_units': 512,        # Dense layer units
+    'dropout_rate': 0.3,       # Dropout rate
     'learning_rate': 0.001,    # Learning rate
     'batch_size': 128,         # Batch size
-    'epochs': 100,             # Training epochs
-    'dropout_rate': 0.3,       # Dropout rate
-    'validation_split': 0.2,   # Validation data ratio
+    'epochs': 10,              # Training epochs
+    'validation_split': 0.2    # Validation split
 }
 
+# Feature engineering parameters
 FEATURE_CONFIG = {
-    'use_ngrams': True,        # Enable n-gram features
-    'ngram_range': (2, 3),     # Bigrams and trigrams
-    'calculate_entropy': True,  # Calculate domain entropy
-    'vowel_consonant_ratio': True,  # Linguistic features
-    'special_chars': True,     # Special character analysis
+    'ngram_range': (1, 3),     # N-gram range
+    'min_domain_length': 3,    # Minimum domain length
+    'max_domain_length': 100,  # Maximum domain length
 }
 
-TRAINING_CONFIG = {
-    'early_stopping': True,    # Stop when no improvement
-    'patience': 10,            # Early stopping patience
-    'monitor': 'val_accuracy', # Metric to monitor
-    'save_best_model': True,   # Save best performing model
-    'model_checkpoint': True,  # Save model checkpoints
+# Alert thresholds for SOC
+ALERT_CONFIG = {
+    'high_risk_threshold': 0.8,    # High risk DGA probability
+    'medium_risk_threshold': 0.6,  # Medium risk DGA probability
+    'batch_alert_count': 10,       # Alert if more than X DGA domains in batch
 }
-```
 
-### Dashboard Configuration (`config.py`)
-```python
-DASHBOARD_CONFIG = {
-    'title': 'DGA Detection SOC Dashboard',
-    'theme': 'dark',
-    'refresh_interval': 30,    # Seconds
-    'max_results': 1000,       # Maximum displayed results
-    'alert_threshold': 0.8,    # DGA probability threshold
-    'colors': {
-        'dga': '#FF4444',      # Red for DGA
-        'legitimate': '#44FF44', # Green for legitimate
-        'warning': '#FFAA44',   # Orange for warnings
-    }
+# Streamlit configuration
+STREAMLIT_CONFIG = {
+    'page_title': 'DGA Analysis - AIOps SOC',
+    'page_icon': '🛡️',
+    'layout': 'wide',
+    'sidebar_state': 'expanded'
+}
+
+# Model file names
+MODEL_FILES = {
+    'main_model': 'dga_classifier.h5',
+    'tokenizer': 'tokenizer.pkl',
+    'scaler': 'feature_scaler.pkl',
+    'label_encoder': 'label_encoder.pkl'
 }
 ```
 
-## 📈 Performance Metrics
+## Performance Metrics
 
 The model is designed to achieve the following performance targets:
 
@@ -210,98 +292,7 @@ The model is designed to achieve the following performance targets:
 - **Precision-Recall Curve**: Precision vs Recall trade-offs
 - **Cross-Validation**: K-fold validation results
 
-## 🔧 Advanced Usage
-
-### Feature Engineering Components
-
-#### Text Preprocessing
-```python
-# Domain length analysis
-domain_length = len(domain)
-
-# Character frequency distribution
-char_freq = Counter(domain.lower())
-
-# Entropy calculation
-entropy = -sum((freq/len(domain)) * math.log2(freq/len(domain)) 
-               for freq in char_freq.values())
-```
-
-#### N-gram Analysis
-```python
-# Bigrams and trigrams
-bigrams = [''.join(bg) for bg in zip(domain[:-1], domain[1:])]
-trigrams = [''.join(tg) for tg in zip(domain[:-2], domain[1:-1], domain[2:])]
-```
-
-#### Linguistic Features
-```python
-# Vowel/consonant ratio
-vowels = 'aeiou'
-vowel_count = sum(1 for char in domain.lower() if char in vowels)
-consonant_count = sum(1 for char in domain.lower() if char.isalpha() and char not in vowels)
-vowel_consonant_ratio = vowel_count / max(consonant_count, 1)
-
-# Lexical diversity
-lexical_diversity = len(set(domain.lower())) / len(domain)
-```
-
-### Model Architecture Details
-
-#### LSTM Branch
-```python
-# Sequential pattern recognition
-lstm_input = Embedding(vocab_size, embedding_dim)(input_layer)
-lstm_1 = LSTM(256, return_sequences=True, dropout=0.3)(lstm_input)
-lstm_2 = LSTM(128, dropout=0.3)(lstm_1)
-```
-
-#### CNN Branch
-```python
-# Local pattern detection
-cnn_input = Embedding(vocab_size, embedding_dim)(input_layer)
-conv_1 = Conv1D(128, 3, activation='relu')(cnn_input)
-pool_1 = MaxPooling1D(2)(conv_1)
-conv_2 = Conv1D(64, 3, activation='relu')(pool_1)
-global_pool = GlobalMaxPooling1D()(conv_2)
-```
-
-#### Feature Fusion
-```python
-# Combine all features
-concat_features = Concatenate()([lstm_2, global_pool, numeric_features])
-dense_1 = Dense(512, activation='relu')(concat_features)
-batch_norm = BatchNormalization()(dense_1)
-dropout_1 = Dropout(0.3)(batch_norm)
-dense_2 = Dense(256, activation='relu')(dropout_1)
-dropout_2 = Dropout(0.3)(dense_2)
-output = Dense(1, activation='sigmoid')(dropout_2)
-```
-
-## 📁 Project Structure
-
-```
-project-aiops-dga/
-│
-├── data/
-│   └── dga_data.csv           # Dataset utama
-│
-├── models/                    # Model yang sudah dilatih disimpan disini
-│   ├── best_model.h5         # Best performing model
-│   ├── model_weights.h5      # Model weights
-│   └── tokenizer.pkl         # Text tokenizer
-│
-├── static/
-│   └── style.css             # Styling untuk Streamlit
-│
-├── main.py                   # File utama - All-in-one solution
-├── app.py                    # Streamlit web application
-├── requirements.txt          # Python dependencies
-├── config.py                 # Konfigurasi project
-└── README.md                 # This file
-```
-
-## 🧩 Main Components
+## Main Components
 
 ### `main.py` - All-in-One Solution
 Contains all core functionality:
@@ -339,7 +330,7 @@ Interactive web interface featuring:
 - Model performance monitoring
 - False positive reduction
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Deep Learning**: TensorFlow/Keras, PyTorch
 - **Data Processing**: Pandas, NumPy, Scikit-learn
@@ -347,7 +338,7 @@ Interactive web interface featuring:
 - **Web Interface**: Streamlit
 - **Model Serving**: TensorFlow Serving (optional)
 
-## ✨ Key Advantages
+## Key Advantages
 
 1. **Single File Solution** - Mudah maintain dan deploy
 2. **High Performance** - Deep learning untuk akurasi maksimal
@@ -355,7 +346,7 @@ Interactive web interface featuring:
 4. **Scalable Architecture** - Bisa handle volume tinggi
 5. **Interactive Dashboard** - User-friendly interface
 
-## 🚨 SOC Integration Features
+## SOC Integration Features
 
 ### Real-time Monitoring
 ```python
@@ -365,17 +356,6 @@ monitor.start_real_time_analysis(
     threshold=0.8,
     alert_callback=send_alert_to_soc
 )
-```
-
-### Alert System
-```python
-# Configurable alerting
-alert_config = {
-    'high_risk_threshold': 0.9,    # Immediate alert
-    'medium_risk_threshold': 0.7,  # Warning alert
-    'batch_alert_interval': 300,   # 5 minutes
-    'max_alerts_per_hour': 100,    # Rate limiting
-}
 ```
 
 ### Batch Processing
@@ -389,7 +369,7 @@ results = batch_processor.analyze_domains(
 )
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -420,29 +400,7 @@ converter.optimizations = [tf.lite.Optimize.DEFAULT]
 tflite_model = converter.convert()
 ```
 
-## 📚 Dependencies
-
-### Core Requirements (`requirements.txt`)
-```
-tensorflow>=2.13.0
-streamlit>=1.28.0
-pandas>=2.0.0
-numpy>=1.24.0
-scikit-learn>=1.3.0
-plotly>=5.15.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
-```
-
-### Optional Dependencies
-```
-torch>=2.0.0          # For PyTorch implementation
-transformers>=4.30.0   # For transformer models
-optuna>=3.2.0         # For hyperparameter tuning
-mlflow>=2.5.0         # For experiment tracking
-```
-
-## 🔒 Security Considerations
+## Security Considerations
 
 - Implement input validation for domain names
 - Use secure file upload mechanisms
@@ -450,31 +408,8 @@ mlflow>=2.5.0         # For experiment tracking
 - Implement rate limiting for API endpoints
 - Regular model updates with new threat intelligence
 
-## 📞 Support & Contact
-
-For questions, issues, or contributions:
-- **GitHub Issues**: [Create an issue](https://github.com/RickoMianto/FP-SOC/issues)
-- **Email**: [Your contact email]
-- **Documentation**: Check the code comments in `main.py`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Institut Teknologi Sepuluh Nopember (ITS) for educational support
 - SOC community for best practices and feedback
 - TensorFlow and Streamlit communities for excellent tools
-
----
-
-⭐ **Star this repository if it helped you detect DGA domains effectively!** ⭐
