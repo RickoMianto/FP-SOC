@@ -207,7 +207,10 @@ class DGAAnalyzer:
         # Prepare labels
         if self.label_encoder is None:
             self.label_encoder = LabelEncoder()
-            y = self.label_encoder.fit_transform(df['isDGA'].values)
+            # Secara eksplisit menentukan urutan kelas untuk memastikan
+            # 'legitimate' menjadi 0 dan 'dga' menjadi 1.
+            self.label_encoder.classes_ = np.array(['legitimate', 'dga'])
+            y = self.label_encoder.transform(df['isDGA'].values)
         else:
             y = self.label_encoder.transform(df['isDGA'].values)
         
@@ -425,13 +428,19 @@ def main():
             # --- TAMBAHKAN KODE INI ---
             # Membersihkan data: Hapus baris dengan domain kosong (NaN) dan pastikan semua domain adalah string
             print("🧹 Cleaning data...")
-            # Hapus baris jika kolom 'domain' kosong
             df.dropna(subset=['domain'], inplace=True)
-            # Ubah tipe data kolom 'domain' menjadi string untuk menghindari error
             df['domain'] = df['domain'].astype(str)
             print(f"📊 {len(df)} valid domain records after cleaning.")
             # --------------------------
-            
+
+            # --- TAMBAHKAN KODE INI UNTUK NORMALISASI LABEL ---
+            print("🔬 Normalizing labels...")
+            # Mengubah semua label yang bukan 'dga' menjadi 'legitimate' untuk konsistensi.
+            # Ini akan menangani 'legit', 'Legitimate', dll.
+            df['isDGA'] = df['isDGA'].apply(lambda x: 'dga' if x == 'dga' else 'legitimate')
+            print(f"Labels after normalization: {df['isDGA'].unique()}")
+            # ----------------------------------------------------
+
             # Train model
             history = analyzer.train(df)
             
