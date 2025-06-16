@@ -274,6 +274,31 @@ MODEL_FILES = {
     'label_encoder': 'label_encoder.pkl'
 }
 ```
+## Documentation
+
+### Training Model Output (`main.py`)
+![Screenshot 2025-06-17 001011](https://github.com/user-attachments/assets/0d721145-f77d-410e-a155-6276a9fbd386)
+
+### Web-App Feature
+
+#### Feature Option
+![Screenshot 2025-06-17 000645](https://github.com/user-attachments/assets/15fc8256-4da2-4860-99eb-80ef2b1b1599)
+![Screenshot 2025-06-17 000621](https://github.com/user-attachments/assets/57ddaa8a-211b-46ba-a404-111742a03f8e)
+
+#### Single Domain Analysis 
+![Screenshot 2025-06-16 235903](https://github.com/user-attachments/assets/c897fe3f-1bfe-4782-a56b-78b4903fe944)
+![Screenshot 2025-06-16 235935](https://github.com/user-attachments/assets/b4fdb973-dd7c-4238-8b4d-284cc7f68ede)
+![Screenshot 2025-06-17 000013](https://github.com/user-attachments/assets/75dc3a3e-6345-4d01-b0b0-257fcc8d13d6)
+
+#### Batch Analysis
+![Screenshot 2025-06-17 000058](https://github.com/user-attachments/assets/d70f3c70-0c18-4935-9920-71c72ae880d7)
+
+#### Real-Time Monitoring
+![Screenshot 2025-06-17 000126](https://github.com/user-attachments/assets/9fca941c-38c4-4ac3-839c-f2a146b45099)
+![Screenshot 2025-06-17 000249](https://github.com/user-attachments/assets/878fc9a7-2cd4-4f2e-a7d2-0e0901fd4db5)
+
+#### Model Training
+![Screenshot 2025-06-17 000331](https://github.com/user-attachments/assets/8a14d6e7-b9c8-4826-9f5a-50dfdd24fe2e)
 
 ## Performance Metrics
 
