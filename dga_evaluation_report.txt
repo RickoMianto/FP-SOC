@@ -1,0 +1,26 @@
+DGA DETECTION MODEL - EVALUATION REPORT
+==================================================
+
+PERFORMANCE METRICS:
+Accuracy:  0.9936
+Precision: 0.9971
+Recall:    0.9901
+F1-Score:  0.9936
+ROC AUC:   0.9998
+PR AUC:    0.9998
+
+CONFUSION MATRIX:
+True Negatives:  15954
+False Positives: 46
+False Negatives: 158
+True Positives:  15842
+
+CLASSIFICATION REPORT:
+              precision    recall  f1-score   support
+
+  Legitimate       0.99      1.00      0.99     16000
+         DGA       1.00      0.99      0.99     16000
+
+    accuracy                           0.99     32000
+   macro avg       0.99      0.99      0.99     32000
+weighted avg       0.99      0.99      0.99     32000
