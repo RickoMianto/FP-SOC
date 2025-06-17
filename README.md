@@ -317,6 +317,9 @@ The model is designed to achieve the following performance targets:
 - **Precision-Recall Curve**: Precision vs Recall trade-offs
 - **Cross-Validation**: K-fold validation results
 
+### Model Evaluation
+![Screenshot 2025-06-17 074153](https://github.com/user-attachments/assets/4364b685-7a3d-4092-8093-9477cd17d20b)
+
 ## Main Components
 
 ### `main.py` - All-in-One Solution
