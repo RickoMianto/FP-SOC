@@ -158,7 +158,7 @@ cd FP-SOC
 2. **Create virtual environment**
 ```bash
 python -m venv venv
-# On Windows: venv\Scripts\activate
+venv\Scripts\activate # for windows
 ```
 
 3. **Install dependencies**
