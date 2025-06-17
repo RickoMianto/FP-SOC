@@ -2,6 +2,13 @@
 
 Advanced Domain Generation Algorithm (DGA) detection system using Deep Learning for Security Operations Center (SOC) environments.
 
+### Anggota Kelompok 17:
+1. M Abhinaya Al Faruqi (5027231011)
+2. M. Rizq Taufan (5027231021)
+3. Ricko Mianto Jaya Saputra (5027231031)
+4. M. Nafi Firdaus (5027231045)
+5. Gandhi Ert Julio (5027231081)
+
 ## Overview
 
 This project implements a comprehensive DGA detection system that combines:
