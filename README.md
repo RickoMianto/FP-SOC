@@ -441,3 +441,6 @@ tflite_model = converter.convert()
 - Institut Teknologi Sepuluh Nopember (ITS) for educational support
 - SOC community for best practices and feedback
 - TensorFlow and Streamlit communities for excellent tools
+
+
+
